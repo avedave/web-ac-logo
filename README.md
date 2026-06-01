@@ -7,12 +7,12 @@ Web-Logo is a full web implementation of the AC-Logo interpreter, born from a si
 The project began as a challenge: to transform a hand-drawn concept into a fully functional, browser-based application. The original vision was captured on a piece of graph paper, outlining a workspace for turtle graphics with a command/file editor, a side panel for instructions, and a turtle canvas.
 
 ### The Original Sketch
-![Original Napkin Sketch](media/web-logo.png)
+![Original Napkin Sketch](img/web-logo.png)
 
 ### The Final Implementation
 The result is a polished, feature-rich Logo environment that stays true to the initial design while adding modern UI elements and a robust interpreter.
 
-![Final System Screenshot](media/web-logo-final.png)
+![Final System Screenshot](img/web-logo-final.png)
 
 ## Features
 
