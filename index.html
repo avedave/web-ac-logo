@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="glass-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web-Logo — Responsive AC-Logo Interpreter</title>
+  <meta name="description" content="A premium, full web implementation of the classic AC-Logo programming language. No backend required, client-side only drawing with smooth animated turtles and multiple language support.">
+  
+  <!-- Premium Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Main Grid App Layout -->
+  <div class="app-container" id="appContainer">
+    
+    <!-- LEFT PANEL: File Browser & Settings -->
+    <aside class="panel left-panel" id="leftPanel" aria-label="File Browser & Presets">
+      <div class="panel-header">
+        <div class="logo-area">
+          <span class="menu-icon" aria-hidden="true">☰</span>
+          <h1 class="logo-title">WEB-LOGO</h1>
+        </div>
+      </div>
+      
+      <!-- Files List Container -->
+      <div class="panel-content files-section">
+        <div class="section-title-bar">
+          <h2 id="filesHeader">SAVED FILES</h2>
+          <button class="icon-btn" id="newFileBtn" title="Create New File" aria-label="Create New File">+</button>
+        </div>
+        <div class="file-list" id="fileList" role="tablist" aria-labelledby="filesHeader">
+          <!-- Populated by JavaScript -->
+        </div>
+        
+        <div class="section-title-bar presets-title-bar">
+          <h2 id="presetsHeader">PRESETS</h2>
+        </div>
+        <div class="file-list preset-list" id="presetList" role="tablist" aria-labelledby="presetsHeader">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+      
+      <!-- Left Panel Footer: Settings / Profile -->
+      <div class="panel-footer settings-footer">
+        <button class="settings-profile-btn" id="settingsBtn" aria-label="Open Settings">
+          <div class="user-avatar" id="userAvatar">
+            <!-- Dynamic SVG profile icon -->
+            <svg class="avatar-icon" viewBox="0 0 24 24" width="24" height="24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+          </div>
+          <div class="settings-text-group">
+            <span class="settings-label" id="lblSettings">Settings & Info</span>
+            <span class="settings-user" id="lblUserRole">Standard User</span>
+          </div>
+          <span class="settings-gear" aria-hidden="true">⚙</span>
+        </button>
+      </div>
+      
+      <!-- Collapse Arrow Left -->
+      <button class="collapse-btn collapse-left" id="toggleLeftPanel" title="Toggle Left Sidebar" aria-expanded="true" aria-controls="leftPanel">
+        <span class="arrow" aria-hidden="true">◀</span>
+      </button>
+    </aside>
+    
+    
+    <!-- CENTER MAIN VIEWPORT: Canvas and Drawing Grid -->
+    <main class="main-viewport" id="mainViewport">
+      <div class="canvas-container" id="canvasContainer">
+        <!-- Interactive Canvas Background Grid -->
+        <div class="grid-overlay"></div>
+        
+        <!-- Canvas Element -->
+        <canvas id="drawingCanvas"></canvas>
+        
+        <!-- Live Animated Turtle Character Layer -->
+        <div class="turtle-sprite" id="turtleSprite">
+          <!-- Dynamic SVG filled by active turtle icon shape -->
+        </div>
+        
+        <!-- Canvas Watermark / Coordinates Overlay -->
+        <div class="canvas-overlay-coords" id="coordsDisplay">X: 0, Y: 0 | H: 0°</div>
+      </div>
+    </main>
+    
+    
+    <!-- RIGHT PANEL: Cheatsheet Instructions -->
+    <aside class="panel right-panel" id="rightPanel" aria-label="Cheatsheet Instructions">
+      <div class="panel-header flex-header">
+        <h2 class="cheatsheet-title" id="lblCheatsheetTitle">AC-LOGO MANUAL</h2>
+        <button class="close-btn-x" id="closeRightPanel" title="Close Manual" aria-label="Close Manual">×</button>
+      </div>
+      
+      <div class="panel-content cheatsheet-content" id="cheatsheetContent">
+        <!-- Loaded dynamically in js depending on language selection -->
+      </div>
+      
+      <!-- Collapse Arrow Right -->
+      <button class="collapse-btn collapse-right" id="toggleRightPanel" title="Toggle Right Sidebar" aria-expanded="true" aria-controls="rightPanel">
+        <span class="arrow" aria-hidden="true">▶</span>
+      </button>
+    </aside>
+    
+    
+    <!-- BOTTOM PANEL: Interactive Editor & Command Center -->
+    <section class="panel bottom-panel" id="bottomPanel" aria-label="Code Editor & Command Bar">
+      
+      <!-- Slide control trigger -->
+      <div class="bottom-drag-bar" id="bottomDragBar">
+        <button class="slide-toggle-btn" id="toggleBottomPanel" title="Slide Editor Open/Close" aria-expanded="true" aria-controls="bottomPanel">
+          <span class="vertical-arrows" aria-hidden="true">▲▼</span>
+        </button>
+      </div>
+      
+      <div class="bottom-panel-inner">
+        <!-- Tabs and Settings Bar -->
+        <div class="editor-header">
+          <div class="tab-group" role="tablist">
+            <button class="editor-tab active" id="tabCmd" role="tab" aria-selected="true" aria-controls="tabContentCmd">CMD</button>
+            <button class="editor-tab" id="tabFile" role="tab" aria-selected="false" aria-controls="tabContentFile">FILE</button>
+          </div>
+          
+          <div class="speed-and-controls">
+            <!-- Speed Selector -->
+            <div class="speed-control-group">
+              <label for="speedSlider" id="lblSpeed">Speed: Normal</label>
+              <input type="range" id="speedSlider" min="0" max="4" value="2" step="1" aria-valuemin="0" aria-valuemax="4" aria-valuenow="2" aria-valuetext="Normal">
+            </div>
+            
+            <button class="btn secondary-btn" id="btnHelp" title="Open Quick Guide">?</button>
+          </div>
+        </div>
+        
+        <!-- Interactive Inputs -->
+        <div class="editor-content-area">
+          
+          <!-- CMD TAB CONTENT -->
+          <div class="tab-pane active" id="tabContentCmd" role="tabpanel" aria-labelledby="tabCmd">
+            <div class="cli-input-wrapper">
+              <div class="cli-prompt" aria-hidden="true">&gt;</div>
+              <input type="text" class="cli-input" id="cliInputField" placeholder="Enter Logo command (e.g. FD 100 RT 90) and press Enter..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="cli-feedback-log" id="cliLog" aria-live="polite">
+              <div class="log-line system-line">Welcome to WEB-LOGO. Type a command or run a preset.</div>
+            </div>
+          </div>
+          
+          <!-- FILE TAB CONTENT -->
+          <div class="tab-pane" id="tabContentFile" role="tabpanel" aria-labelledby="tabFile" style="display: none;">
+            <div class="file-editor-container">
+              <div class="line-numbers" id="editorLineNumbers" aria-hidden="true">1</div>
+              <textarea class="file-textarea" id="fileEditorField" placeholder="; Write your Logo script here...&#10;REPEAT 36 [&#10;  FD 100&#10;  RT 100&#10;]" spellcheck="false"></textarea>
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- Footer Action Buttons -->
+        <div class="editor-footer">
+          <div class="footer-left-info">
+            <span class="file-status" id="fileStatusDisplay">Draft: unsaved_drawing.logo</span>
+          </div>
+          <div class="footer-actions">
+            <button class="btn danger-btn" id="btnResetCanvas">CLEAR</button>
+            <button class="btn secondary-btn" id="btnSaveFile">SAVE</button>
+            <button class="btn primary-btn" id="btnRunCode">
+              <span class="btn-icon" aria-hidden="true">▶</span>
+              <span id="btnRunText">RUN</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+  
+  
+  <!-- DIALOG: SETTINGS & CUSTOMIZATION OVERLAY -->
+  <dialog class="modal-dialog" id="settingsDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="lblSettingsTitle">Settings & Configuration</h2>
+        <button class="close-modal-btn" id="closeSettingsDialog" aria-label="Close Settings">×</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Language Option Group -->
+        <div class="setting-item">
+          <label class="setting-label" for="settingLang">
+            <strong>Language Interface</strong>
+            <span class="setting-desc">Translates instructions and maps local Logo commands (e.g. FD / AV / NP).</span>
+          </label>
+          <select id="settingLang" class="setting-control">
+            <option value="en">English (EN)</option>
+            <option value="fr">Français (FR)</option>
+            <option value="de">Deutsch (DE)</option>
+            <option value="es">Español (ES)</option>
+            <option value="it">Italiano (IT)</option>
+            <option value="pl">Polski (PL)</option>
+          </select>
+        </div>
+        
+        <!-- Turtle Icon Option Group -->
+        <div class="setting-item">
+          <label class="setting-label" for="settingTurtleIcon">
+            <strong>Turtle Character avatar</strong>
+            <span class="setting-desc">Change the vector drawing avatar style on the screen.</span>
+          </label>
+          <select id="settingTurtleIcon" class="setting-control">
+            <option value="classic">🐢 Classic Turtle</option>
+            <option value="rocket">🚀 Sci-Fi Rocketship</option>
+            <option value="beetle">🐞 Retro Beetle</option>
+            <option value="arrow">✦ Sleek Laser Arrow</option>
+            <option value="wand">🪄 Wizard's Wand</option>
+          </select>
+        </div>
+        
+        <!-- Aesthetic Color Theme Options -->
+        <div class="setting-item">
+          <label class="setting-label" for="settingTheme">
+            <strong>UI Color Palette Theme</strong>
+            <span class="setting-desc">Switch look-and-feel between classic high-tech styles.</span>
+          </label>
+          <select id="settingTheme" class="setting-control">
+            <option value="glass-dark">✨ Cyber Synthwave (Glass Dark)</option>
+            <option value="glass-light">☀️ Frosted Daylight (Glass Light)</option>
+            <option value="neon-cyber">⚡ Neon Cyberpunk</option>
+            <option value="retro-green">📟 Green CRT Terminal</option>
+          </select>
+        </div>
+        
+        <!-- User custom Profile -->
+        <div class="setting-item profile-info-item">
+          <label class="setting-label">
+            <strong>User Profile Details</strong>
+            <span class="setting-desc">Local client session preferences. All data remains in browser.</span>
+          </label>
+          <div class="profile-preview-card">
+            <div class="profile-card-avatar" id="modalProfileAvatar"></div>
+            <div class="profile-card-fields">
+              <input type="text" id="profileNameInput" class="setting-control text-control" value="Aero Coder" placeholder="Edit Profile Name">
+              <div class="badge">Local Developer</div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button class="btn secondary-btn" id="btnSettingsReset">RESET DEFAULT</button>
+        <button class="btn primary-btn" id="btnSettingsApply">APPLY CHANGES</button>
+      </div>
+    </div>
+  </dialog>
+  
+  
+  <!-- DIALOG: HELP & QUICK START OVERLAY -->
+  <dialog class="modal-dialog" id="helpDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Web-Logo Quick Start Guide</h2>
+        <button class="close-modal-btn" id="closeHelpDialog" aria-label="Close Help">×</button>
+      </div>
+      <div class="modal-body markdown-body">
+        <h3>Welcome to WEB-LOGO!</h3>
+        <p>This is a zero-dependency, local-first client implementation of <strong>Logo programming language</strong>. You can control the turtle avatar on the canvas by typing commands in the console (CMD) or executing whole scripts (FILE).</p>
+        
+        <h4>Quick Commands Sheet:</h4>
+        <ul>
+          <li><strong>FD 100</strong> — Move Forward by 100 units</li>
+          <li><strong>BK 50</strong> — Move Backward by 50 units</li>
+          <li><strong>RT 90</strong> — Rotate Right by 90 degrees</li>
+          <li><strong>LT 45</strong> — Rotate Left by 45 degrees</li>
+          <li><strong>PU</strong> / <strong>PD</strong> — Pen Up (lift) or Pen Down (lower to draw)</li>
+          <li><strong>SETPC red</strong> / <strong>SETPC #ff00ea</strong> — Set pen line color</li>
+          <li><strong>SETPS 5</strong> — Set pen stroke thickness to 5px</li>
+          <li><strong>CS</strong> — Clear Canvas screen and reset turtle coordinates</li>
+          <li><strong>REPEAT 4 [ FD 80 RT 90 ]</strong> — Repeat block to draw a square</li>
+        </ul>
+        
+        <h4>Tips for Premium Drawing:</h4>
+        <ol>
+          <li><strong>Animations:</strong> Set the speed slider to "Slow" or "Medium" to watch the turtle animate and rotate smoothly as it constructs your vectors! Set to "0 (Instant)" for large fractal algorithms.</li>
+          <li><strong>Multi-language:</strong> You can type commands in <em>any</em> supported language (English, French, German, Spanish, Italian, Polish). Go to Settings to translate the whole UI and Cheatsheet!</li>
+          <li><strong>Saved files:</strong> Use Local Browser Storage to store your drafts, and try out the built-in <strong>Presets</strong> in the left sidebar to see what's possible (Koch curves, trees, spirals!).</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button class="btn primary-btn" id="btnHelpClose">GET CODING</button>
+      </div>
+    </div>
+  </dialog>
+
+  
+  <!-- DIALOG: SAVE DIALOG -->
+  <dialog class="modal-dialog" id="saveDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Save Logo Program</h2>
+        <button class="close-modal-btn" id="closeSaveDialog" aria-label="Close Save Dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-item">
+          <label class="setting-label" for="saveFileNameInput">
+            <strong>Program Filename</strong>
+            <span class="setting-desc">Specify a unique name to save your file to browser storage.</span>
+          </label>
+          <input type="text" id="saveFileNameInput" class="setting-control text-control" value="my_drawing.logo" placeholder="filename.logo">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn secondary-btn" id="btnCancelSave">CANCEL</button>
+        <button class="btn primary-btn" id="btnConfirmSave">SAVE FILE</button>
+      </div>
+    </div>
+  </dialog>
+  
+  
+  <!-- JavaScript Application Entry -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
