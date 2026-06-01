@@ -2,6 +2,8 @@
 
 Web-Logo is a full web implementation of the AC-Logo interpreter, born from a simple napkin sketch and brought to life using Antigravity.
 
+**Live Demo:** [https://avedave.github.io/web-ac-logo/](https://avedave.github.io/web-ac-logo/)
+
 ## History
 
 The project began as a challenge: to transform a hand-drawn concept into a fully functional, browser-based application. The original vision was captured on a piece of graph paper, outlining a workspace for turtle graphics with a command/file editor, a side panel for instructions, and a turtle canvas.
